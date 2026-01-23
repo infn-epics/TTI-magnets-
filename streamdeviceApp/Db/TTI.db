@@ -1,0 +1,385 @@
+
+# Voltage Setpoint
+record(ao, "$(P)$(R)Volt:Set") {
+    field(DESC, "Voltage Setpoint")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto setVoltage $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "3")
+    field(DRVH, "35.3")   # Max per TSX3510P (modificare per TSX1820P: 18.15)
+    field(DRVL, "0")
+    field(HOPR, "35.3")
+    field(LOPR, "0")
+    field(PINI, "NO")
+    field(FLNK, "$(P)$(R)Volt:Set:Rbv")
+}
+
+# Voltage Setpoint Readback
+record(ai, "$(P)$(R)Volt:Set:Rbv") {
+    field(DESC, "Voltage Setpoint Readback")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getVoltageSet $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "3")
+    field(SCAN, "Passive")
+}
+
+# Voltage Output Readback (Actual)
+record(ai, "$(P)$(R)Volt:Rbv") {
+    field(DESC, "Voltage Output")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getVoltageRbv $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "3")
+    field(SCAN, "1 second")  # Polling ogni secondo
+    field(FLNK, "$(P)$(R)CalcMode")
+}
+
+##############################################################################
+# CURRENT CONTROL
+##############################################################################
+
+# Current Limit Setpoint
+record(ao, "$(P)$(R)Curr:Set") {
+    field(DESC, "Current Limit Setpoint")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto setCurrent $(PORT)")
+    field(EGU,  "A")
+    field(PREC, "3")
+    field(DRVH, "10.2")   # Max per TSX3510P (modificare per TSX1820P: 20.2)
+    field(DRVL, "0.01")
+    field(HOPR, "10.2")
+    field(LOPR, "0.01")
+    field(PINI, "NO")
+    field(FLNK, "$(P)$(R)Curr:Set:Rbv")
+}
+
+# Current Limit Readback
+record(ai, "$(P)$(R)Curr:Set:Rbv") {
+    field(DESC, "Current Limit Readback")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getCurrentSet $(PORT)")
+    field(EGU,  "A")
+    field(PREC, "3")
+    field(SCAN, "Passive")
+}
+
+# Current Output Readback (Actual)
+record(ai, "$(P)$(R)Curr:Rbv") {
+    field(DESC, "Current Output")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getCurrentRbv $(PORT)")
+    field(EGU,  "A")
+    field(PREC, "3")
+    field(SCAN, "1 second")
+}
+
+##############################################################################
+# POWER READBACK
+##############################################################################
+
+record(ai, "$(P)$(R)Power:Rbv") {
+    field(DESC, "Power Output")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getPower $(PORT)")
+    field(EGU,  "W")
+    field(PREC, "2")
+    field(SCAN, "1 second")
+}
+
+##############################################################################
+# OVP (Over Voltage Protection)
+##############################################################################
+
+record(ao, "$(P)$(R)OVP:Set") {
+    field(DESC, "OVP Threshold")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto setOVP $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "3")
+    field(DRVH, "40.0")   # Max per TSX3510P (modificare per TSX1820P: 25.0)
+    field(DRVL, "1.0")
+    field(HOPR, "40.0")
+    field(LOPR, "1.0")
+    field(PINI, "NO")
+    field(FLNK, "$(P)$(R)OVP:Set:Rbv")
+}
+
+record(ai, "$(P)$(R)OVP:Set:Rbv") {
+    field(DESC, "OVP Threshold Readback")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getOVP $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "3")
+    field(SCAN, "Passive")
+}
+
+##############################################################################
+# OUTPUT ON/OFF CONTROL
+##############################################################################
+
+record(bo, "$(P)$(R)Pwr") {
+    field(DESC, "Output On/Off")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto setOutputState $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(PINI, "NO")
+    field(FLNK, "$(P)$(R)Pwr:Rbv")
+}
+
+record(bi, "$(P)$(R)Pwr:Rbv") {
+    field(DESC, "Output State")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getOutputState $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(SCAN, "1 second")
+}
+
+##############################################################################
+# OPERATING MODE (CV/CC)
+##############################################################################
+
+# Limit Status Register (bit 0 = CC, bit 1 = CV, bit 2 = TRIP)
+record(longin, "$(P)$(R)LimitStatus") {
+    field(DESC, "Limit Status Register")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getLimitStatus $(PORT)")
+    field(SCAN, "1 second")
+    field(FLNK, "$(P)$(R)CalcMode")
+}
+
+# Calcola modo operativo
+record(calcout, "$(P)$(R)CalcMode") {
+    field(DESC, "Calculate Operating Mode")
+    field(INPA, "$(P)$(R)LimitStatus")
+    field(CALC, "A&3")  # Maschera bit 0 e 1
+    field(OUT,  "$(P)$(R)Mode PP")
+    field(OOPT, "Every Time")
+}
+
+# Operating Mode Display
+record(mbbi, "$(P)$(R)Mode") {
+    field(DESC, "Operating Mode")
+    field(INP,  "$(P)$(R)CalcMode")
+    field(ZRVL, "0")
+    field(ZRST, "Unknown")
+    field(ZRSV, "MINOR")
+    field(ONVL, "1")
+    field(ONST, "CC")      # Constant Current
+    field(ONSV, "NO_ALARM")
+    field(TWVL, "2")
+    field(TWST, "CV")      # Constant Voltage
+    field(TWSV, "NO_ALARM")
+    field(THVL, "3")
+    field(THST, "Unstable")
+    field(THSV, "MAJOR")
+}
+
+# Trip Status (bit 2)
+record(calcout, "$(P)$(R)CalcTrip") {
+    field(DESC, "Calculate Trip Status")
+    field(INPA, "$(P)$(R)LimitStatus")
+    field(CALC, "(A&4)>>2")  # Estrae bit 2
+    field(OUT,  "$(P)$(R)Trip PP")
+    field(OOPT, "Every Time")
+}
+
+record(bi, "$(P)$(R)Trip") {
+    field(DESC, "Trip Status")
+    field(INP,  "$(P)$(R)CalcTrip")
+    field(ZNAM, "OK")
+    field(ONAM, "TRIPPED")
+    field(ZSV,  "NO_ALARM")
+    field(OSV,  "MAJOR")
+}
+
+##############################################################################
+# DELTA (STEP) CONTROLS
+##############################################################################
+
+record(ao, "$(P)$(R)DeltaV:Set") {
+    field(DESC, "Voltage Step Size")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto setDeltaV $(PORT)")
+    field(EGU,  "V")
+    field(PREC, "3")
+    field(DRVH, "1.0")
+    field(DRVL, "0.0")
+    field(VAL,  "0.1")
+}
+
+record(ao, "$(P)$(R)DeltaI:Set") {
+    field(DESC, "Current Step Size")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto setDeltaI $(PORT)")
+    field(EGU,  "A")
+    field(PREC, "3")
+    field(DRVH, "1.0")
+    field(DRVL, "0.0")
+    field(VAL,  "0.01")
+}
+
+# Increment/Decrement Commands
+record(bo, "$(P)$(R)Volt:Inc") {
+    field(DESC, "Increment Voltage")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto incVoltage $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Increment")
+    field(HIGH, "0.5")
+}
+
+record(bo, "$(P)$(R)Volt:Dec") {
+    field(DESC, "Decrement Voltage")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto decVoltage $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Decrement")
+    field(HIGH, "0.5")
+}
+
+record(bo, "$(P)$(R)Curr:Inc") {
+    field(DESC, "Increment Current")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto incCurrent $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Increment")
+    field(HIGH, "0.5")
+}
+
+record(bo, "$(P)$(R)Curr:Dec") {
+    field(DESC, "Decrement Current")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto decCurrent $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Decrement")
+    field(HIGH, "0.5")
+}
+
+##############################################################################
+# DAMPING
+##############################################################################
+
+record(bo, "$(P)$(R)Damping") {
+    field(DESC, "Current Meter Damping")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto setDamping $(PORT)")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+    field(PINI, "NO")
+}
+
+##############################################################################
+# MEMORY STORE/RECALL
+##############################################################################
+
+record(longout, "$(P)$(R)Store:Sel") {
+    field(DESC, "Memory Store Number")
+    field(VAL,  "1")
+    field(DRVH, "25")
+    field(DRVL, "1")
+}
+
+record(bo, "$(P)$(R)Store:Cmd") {
+    field(DESC, "Save to Memory")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto saveSetup($(P)$(R)Store:Sel) $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Save")
+    field(HIGH, "0.5")
+}
+
+record(longout, "$(P)$(R)Recall:Sel") {
+    field(DESC, "Memory Recall Number")
+    field(VAL,  "1")
+    field(DRVH, "25")
+    field(DRVL, "1")
+}
+
+record(bo, "$(P)$(R)Recall:Cmd") {
+    field(DESC, "Recall from Memory")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto recallSetup($(P)$(R)Recall:Sel) $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Recall")
+    field(HIGH, "0.5")
+}
+
+##############################################################################
+# SYSTEM COMMANDS
+##############################################################################
+
+record(stringin, "$(P)$(R)IDN") {
+    field(DESC, "Device Identification")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getIDN $(PORT)")
+    field(PINI, "YES")
+}
+
+record(bo, "$(P)$(R)Reset") {
+    field(DESC, "Reset to Defaults")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto reset $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Reset")
+    field(HIGH, "0.5")
+}
+
+record(bo, "$(P)$(R)ClearStatus") {
+    field(DESC, "Clear Status Registers")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto clearStatus $(PORT)")
+    field(ZNAM, "Idle")
+    field(ONAM, "Clear")
+    field(HIGH, "0.5")
+}
+
+record(bo, "$(P)$(R)GoLocal") {
+    field(DESC, "Go to Local Mode")
+    field(DTYP, "stream")
+    field(OUT,  "@TSX.proto goLocal $(PORT)")
+    field(ZNAM, "Remote")
+    field(ONAM, "Local")
+    field(HIGH, "0.5")
+}
+
+##############################################################################
+# ERROR REGISTERS
+##############################################################################
+
+record(longin, "$(P)$(R)ESR") {
+    field(DESC, "Event Status Register")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getESR $(PORT)")
+    field(SCAN, "5 second")
+}
+
+record(longin, "$(P)$(R)STB") {
+    field(DESC, "Status Byte Register")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getSTB $(PORT)")
+    field(SCAN, "5 second")
+}
+
+record(longin, "$(P)$(R)EER") {
+    field(DESC, "Execution Error Register")
+    field(DTYP, "stream")
+    field(INP,  "@TSX.proto getEER $(PORT)")
+    field(SCAN, "5 second")
+}
+
+##############################################################################
+# CONNECTION STATUS
+##############################################################################
+
+record(bi, "$(P)$(R)Connected") {
+    field(DESC, "Connection Status")
+    field(INP,  "$(P)$(R)Volt:Rbv.SEVR")
+    field(ZNAM, "Connected")
+    field(ONAM, "Disconnected")
+    field(ZSV,  "NO_ALARM")
+    field(OSV,  "MAJOR")
+    field(SCAN, "1 second")
+}

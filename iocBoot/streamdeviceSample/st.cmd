@@ -6,6 +6,7 @@
 < envPaths
 
 cd "${TOP}"
+dbLoadDatabase "dbd/TTI.dbd"
 
 # Evironment variables
 epicsEnvSet("STREAM_PROTOCOL_PATH", "${TOP}/db")
@@ -14,6 +15,16 @@ epicsEnvSet("BOOT","${TOP}/iocBoot/${IOC}")
 ## Register all support components
 dbLoadDatabase "dbd/streamdeviceSample.dbd"
 streamdeviceSample_registerRecordDeviceDriver pdbbase
+
+epicsEnvSet("DEVICE", "TTF001")
+epicsEnvSet("PORT", "ttf001_port")
+epicsEnvSet("ADDR", "192.168.1.100:5025")  # Il tuo indirizzo
+
+drvAsynIPPortConfigure("$(PORT)", "$(ADDR)")
+
+dbLoadRecords("db/TTI.db", "P=MAGNETS:, R=TTF001:, PORT=$(PORT)")
+
+iocInit
 
 ### Create a IPCMini device instance
 epicsEnvSet("DEVICE", "TEST:STREAMDEVICESAMPLE")
