@@ -1,0 +1,255 @@
+##############################################################################
+# StreamDevice Protocol File for Thurlby Thandar TSX Series II
+# Power Supply
+##############################################################################
+
+# Terminatori di comando
+Terminator = LF;        # Invio comandi: Line Feed (0x0A)
+InTerminator = CR LF;   # Ricezione risposte: CR+LF (0x0D 0x0A)
+
+# Timeout e retry
+ReplyTimeout = 1000;    # 1 secondo
+ReadTimeout = 500;      # 500ms
+WriteTimeout = 500;     # 500ms
+ExtraInput = Ignore;    # Ignora caratteri extra
+
+##############################################################################
+# VOLTAGE COMMANDS
+##############################################################################
+
+# Leggi tensione impostata (setpoint)
+getVoltageSet {
+    out "V1?";
+    in "V1 %f";
+}
+
+# Leggi tensione output (readback)
+getVoltageRbv {
+    out "V1O?";
+    in "%fV";
+}
+
+# Imposta tensione (senza verifica)
+setVoltage {
+    out "V1 %.3f";
+}
+
+# Imposta tensione con verifica settling
+setVoltageVerify {
+    out "V1V %.3f";
+}
+
+##############################################################################
+# CURRENT COMMANDS
+##############################################################################
+
+# Leggi corrente impostata (setpoint)
+getCurrentSet {
+    out "I1?";
+    in "I1 %f";
+}
+
+# Leggi corrente output (readback)
+getCurrentRbv {
+    out "I1O?";
+    in "%fA";
+}
+
+# Imposta limite corrente
+setCurrent {
+    out "I1 %.3f";
+}
+
+##############################################################################
+# OVP (Over Voltage Protection)
+##############################################################################
+
+# Leggi soglia OVP
+getOVP {
+    out "OVP1?";
+    in "VP1 %f";
+}
+
+# Imposta soglia OVP
+setOVP {
+    out "OVP1 %.3f";
+}
+
+##############################################################################
+# OUTPUT ON/OFF
+##############################################################################
+
+# Leggi stato output
+getOutputState {
+    out "OP1?";
+    in "%d";
+}
+
+# Imposta stato output (0=OFF, 1=ON)
+setOutputState {
+    out "OP1 %d";
+}
+
+##############################################################################
+# POWER READBACK
+##############################################################################
+
+# Leggi potenza output
+getPower {
+    out "POWER1?";
+    in "%f";
+}
+
+##############################################################################
+# LIMIT STATUS
+##############################################################################
+
+# Leggi e resetta registro stato limiti
+getLimitStatus {
+    out "LSR1?";
+    in "%d";
+}
+
+##############################################################################
+# DELTA VOLTAGE/CURRENT (Step Size)
+##############################################################################
+
+# Leggi step tensione
+getDeltaV {
+    out "DELTAV1?";
+    in "DELTAV1 %f";
+}
+
+# Imposta step tensione
+setDeltaV {
+    out "DELTAV1 %.3f";
+}
+
+# Leggi step corrente
+getDeltaI {
+    out "DELTAI1?";
+    in "DELTAI1 %f";
+}
+
+# Imposta step corrente
+setDeltaI {
+    out "DELTAI1 %.3f";
+}
+
+# Incrementa tensione
+incVoltage {
+    out "INCV1";
+}
+
+# Decrementa tensione
+decVoltage {
+    out "DECV1";
+}
+
+# Incrementa corrente
+incCurrent {
+    out "INCI1";
+}
+
+# Decrementa corrente
+decCurrent {
+    out "DECI1";
+}
+
+##############################################################################
+# DAMPING
+##############################################################################
+
+# Imposta damping (0=OFF, 1=ON)
+setDamping {
+    out "DAMPING1 %d";
+}
+
+##############################################################################
+# STORE/RECALL
+##############################################################################
+
+# Salva setup in memoria (1-25)
+saveSetup {
+    out "*SAV1 %d";
+}
+
+# Richiama setup da memoria (1-25)
+recallSetup {
+    out "*RCL1 %d";
+}
+
+##############################################################################
+# SYSTEM COMMANDS
+##############################################################################
+
+# Identificazione dispositivo
+getIDN {
+    out "*IDN?";
+    in "%s";
+}
+
+# Reset a default
+reset {
+    out "*RST";
+}
+
+# Clear status
+clearStatus {
+    out "*CLS";
+}
+
+# Vai in locale
+goLocal {
+    out "LOCAL";
+}
+
+##############################################################################
+# STATUS REGISTERS (IEEE 488.2)
+##############################################################################
+
+# Standard Event Status Register
+getESR {
+    out "*ESR?";
+    in "%d";
+}
+
+# Status Byte Register
+getSTB {
+    out "*STB?";
+    in "%d";
+}
+
+# Execution Error Register
+getEER {
+    out "EER?";
+    in "%d";
+}
+
+# Query Error Register
+getQER {
+    out "QER?";
+    in "%d";
+}
+
+##############################################################################
+# LAN CONFIGURATION (requires power cycle to take effect)
+##############################################################################
+
+# Leggi indirizzo IP
+getIPAddr {
+    out "IPADDR?";
+    in "%s";
+}
+
+# Leggi netmask
+getNetmask {
+    out "NETMASK?";
+    in "%s";
+}
+
+# Leggi configurazione rete
+getNetConfig {
+    out "NETCONFIG?";
+    in "%s";
+}
