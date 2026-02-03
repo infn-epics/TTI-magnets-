@@ -1,39 +1,38 @@
-#!../../bin/linux-x86_64/streamdeviceSample
+#!/usr/bin/env iocsh
+##############################################################################
+# EPICS IOC Startup Script for TSX Power Supply
+# Single unit: SBNQUA01
+##############################################################################
 
-#- You may have to change streamdeviceSample to something else
-#- everywhere it appears in this file
+#!../../bin/linux-x86_64/streamdeviceSample
 
 < envPaths
 
 cd "${TOP}"
-dbLoadDatabase "dbd/TTI.dbd"
 
-# Evironment variables
-epicsEnvSet("STREAM_PROTOCOL_PATH", "${TOP}/db")
-epicsEnvSet("BOOT","${TOP}/iocBoot/${IOC}")
-
-## Register all support components
+## Load database definition
 dbLoadDatabase "dbd/streamdeviceSample.dbd"
 streamdeviceSample_registerRecordDeviceDriver pdbbase
 
-epicsEnvSet("DEVICE", "TTF001")
-epicsEnvSet("PORT", "ttf001_port")
-epicsEnvSet("ADDR", "192.168.1.100:5025")  # Il tuo indirizzo
+epicsEnvSet("STREAM_PROTOCOL_PATH", "${TOP}/db:${TOP}/protocol")
+epicsEnvSet("BOOT", "${TOP}/iocBoot/${IOC}")
 
-drvAsynIPPortConfigure("$(PORT)", "$(ADDR)")
+epicsEnvSet("DEVICE", "SBNQUA01")
+epicsEnvSet("PORT", "SBNQUA01_PORT")
+epicsEnvSet("MOXA_IP", "192.168.197.125")
+epicsEnvSet("MOXA_TCP_PORT", "4001")
 
-dbLoadRecords("db/TTI.db", "P=MAGNETS:, R=TTF001:, PORT=$(PORT)")
+drvAsynIPPortConfigure("$(PORT)", "$(MOXA_IP):$(MOXA_TCP_PORT)", 0, 0, 0)
 
-iocInit
+asynSetOption("$(PORT)", 0, "disconnectOnReadTimeout", "Y")
 
-### Create a IPCMini device instance
-epicsEnvSet("DEVICE", "TEST:STREAMDEVICESAMPLE")
-epicsEnvSet("IP", "192.168.197.105:4002")
-## Create asyn IP port for communication over TCP/IP
-drvAsynIPPortConfigure ("ASYNPORT", "$(IP)")
-## Load record instances
-dbLoadRecords("db/streamdevicesample.template","DEVICE=$(DEVICE),PORT=ASYNPORT,module=1,max=100")
+asynOctetSetOutputEos("$(PORT)", 0, "\n")
 
+asynOctetSetInputEos("$(PORT)", 0, "\r\n")
+dbLoadRecords("db/TSX.db", "P=MAGNETS:, R=SBNQUA01:, PORT=$(PORT)")
+
+# IOC INITIALIZATION
 
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
+dbl

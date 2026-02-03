@@ -1,6 +1,6 @@
 
 # Voltage Setpoint
-record(ao, "$(P)$(R)Volt:Set") {
+record(ao, "$(P)$(R)Volt_Set") {
     field(DESC, "Voltage Setpoint")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto setVoltage $(PORT)")
@@ -15,7 +15,7 @@ record(ao, "$(P)$(R)Volt:Set") {
 }
 
 # Voltage Setpoint Readback
-record(ai, "$(P)$(R)Volt:Set:Rbv") {
+record(ai, "$(P)$(R)Volt_Set_Rbv") {
     field(DESC, "Voltage Setpoint Readback")
     field(DTYP, "stream")
     field(INP,  "@TSX.proto getVoltageSet $(PORT)")
@@ -25,7 +25,7 @@ record(ai, "$(P)$(R)Volt:Set:Rbv") {
 }
 
 # Voltage Output Readback (Actual)
-record(ai, "$(P)$(R)Volt:Rbv") {
+record(ai, "$(P)$(R)Volt_Rbv") {
     field(DESC, "Voltage Output")
     field(DTYP, "stream")
     field(INP,  "@TSX.proto getVoltageRbv $(PORT)")
@@ -40,7 +40,7 @@ record(ai, "$(P)$(R)Volt:Rbv") {
 ##############################################################################
 
 # Current Limit Setpoint
-record(ao, "$(P)$(R)Curr:Set") {
+record(ao, "$(P)$(R)Curr_Set") {
     field(DESC, "Current Limit Setpoint")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto setCurrent $(PORT)")
@@ -55,7 +55,7 @@ record(ao, "$(P)$(R)Curr:Set") {
 }
 
 # Current Limit Readback
-record(ai, "$(P)$(R)Curr:Set:Rbv") {
+record(ai, "$(P)$(R)Curr_Set_Rbv") {
     field(DESC, "Current Limit Readback")
     field(DTYP, "stream")
     field(INP,  "@TSX.proto getCurrentSet $(PORT)")
@@ -65,7 +65,7 @@ record(ai, "$(P)$(R)Curr:Set:Rbv") {
 }
 
 # Current Output Readback (Actual)
-record(ai, "$(P)$(R)Curr:Rbv") {
+record(ai, "$(P)$(R)Curr_Rbv") {
     field(DESC, "Current Output")
     field(DTYP, "stream")
     field(INP,  "@TSX.proto getCurrentRbv $(PORT)")
@@ -78,7 +78,7 @@ record(ai, "$(P)$(R)Curr:Rbv") {
 # POWER READBACK
 ##############################################################################
 
-record(ai, "$(P)$(R)Power:Rbv") {
+record(ai, "$(P)$(R)Power_Rbv") {
     field(DESC, "Power Output")
     field(DTYP, "stream")
     field(INP,  "@TSX.proto getPower $(PORT)")
@@ -91,7 +91,7 @@ record(ai, "$(P)$(R)Power:Rbv") {
 # OVP (Over Voltage Protection)
 ##############################################################################
 
-record(ao, "$(P)$(R)OVP:Set") {
+record(ao, "$(P)$(R)OVP_Set") {
     field(DESC, "OVP Threshold")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto setOVP $(PORT)")
@@ -105,7 +105,7 @@ record(ao, "$(P)$(R)OVP:Set") {
     field(FLNK, "$(P)$(R)OVP:Set:Rbv")
 }
 
-record(ai, "$(P)$(R)OVP:Set:Rbv") {
+record(ai, "$(P)$(R)OVP_Set_Rbv") {
     field(DESC, "OVP Threshold Readback")
     field(DTYP, "stream")
     field(INP,  "@TSX.proto getOVP $(PORT)")
@@ -128,7 +128,7 @@ record(bo, "$(P)$(R)Pwr") {
     field(FLNK, "$(P)$(R)Pwr:Rbv")
 }
 
-record(bi, "$(P)$(R)Pwr:Rbv") {
+record(bi, "$(P)$(R)Pwr_Rbv") {
     field(DESC, "Output State")
     field(DTYP, "stream")
     field(INP,  "@TSX.proto getOutputState $(PORT)")
@@ -199,7 +199,7 @@ record(bi, "$(P)$(R)Trip") {
 # DELTA (STEP) CONTROLS
 ##############################################################################
 
-record(ao, "$(P)$(R)DeltaV:Set") {
+record(ao, "$(P)$(R)DeltaV_Set") {
     field(DESC, "Voltage Step Size")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto setDeltaV $(PORT)")
@@ -210,7 +210,7 @@ record(ao, "$(P)$(R)DeltaV:Set") {
     field(VAL,  "0.1")
 }
 
-record(ao, "$(P)$(R)DeltaI:Set") {
+record(ao, "$(P)$(R)DeltaI_Set") {
     field(DESC, "Current Step Size")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto setDeltaI $(PORT)")
@@ -222,7 +222,7 @@ record(ao, "$(P)$(R)DeltaI:Set") {
 }
 
 # Increment/Decrement Commands
-record(bo, "$(P)$(R)Volt:Inc") {
+record(bo, "$(P)$(R)Volt_Inc") {
     field(DESC, "Increment Voltage")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto incVoltage $(PORT)")
@@ -231,7 +231,7 @@ record(bo, "$(P)$(R)Volt:Inc") {
     field(HIGH, "0.5")
 }
 
-record(bo, "$(P)$(R)Volt:Dec") {
+record(bo, "$(P)$(R)Volt_Dec") {
     field(DESC, "Decrement Voltage")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto decVoltage $(PORT)")
@@ -240,7 +240,7 @@ record(bo, "$(P)$(R)Volt:Dec") {
     field(HIGH, "0.5")
 }
 
-record(bo, "$(P)$(R)Curr:Inc") {
+record(bo, "$(P)$(R)Curr_Inc") {
     field(DESC, "Increment Current")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto incCurrent $(PORT)")
@@ -249,7 +249,7 @@ record(bo, "$(P)$(R)Curr:Inc") {
     field(HIGH, "0.5")
 }
 
-record(bo, "$(P)$(R)Curr:Dec") {
+record(bo, "$(P)$(R)Curr_Dec") {
     field(DESC, "Decrement Current")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto decCurrent $(PORT)")
@@ -275,14 +275,14 @@ record(bo, "$(P)$(R)Damping") {
 # MEMORY STORE/RECALL
 ##############################################################################
 
-record(longout, "$(P)$(R)Store:Sel") {
+record(longout, "$(P)$(R)Store_Sel") {
     field(DESC, "Memory Store Number")
     field(VAL,  "1")
     field(DRVH, "25")
     field(DRVL, "1")
 }
 
-record(bo, "$(P)$(R)Store:Cmd") {
+record(bo, "$(P)$(R)Store_Cmd") {
     field(DESC, "Save to Memory")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto saveSetup($(P)$(R)Store:Sel) $(PORT)")
@@ -291,14 +291,14 @@ record(bo, "$(P)$(R)Store:Cmd") {
     field(HIGH, "0.5")
 }
 
-record(longout, "$(P)$(R)Recall:Sel") {
+record(longout, "$(P)$(R)Recall_Sel") {
     field(DESC, "Memory Recall Number")
     field(VAL,  "1")
     field(DRVH, "25")
     field(DRVL, "1")
 }
 
-record(bo, "$(P)$(R)Recall:Cmd") {
+record(bo, "$(P)$(R)Recall_Cmd") {
     field(DESC, "Recall from Memory")
     field(DTYP, "stream")
     field(OUT,  "@TSX.proto recallSetup($(P)$(R)Recall:Sel) $(PORT)")
