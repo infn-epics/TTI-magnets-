@@ -1,38 +1,33 @@
-#!/usr/bin/env iocsh
-##############################################################################
-# EPICS IOC Startup Script for TSX Power Supply
-# Single unit: SBNQUA01
-##############################################################################
-
 #!../../bin/linux-x86_64/streamdeviceSample
 
 < envPaths
 
+epicsEnvSet("IOC","streamdeviceSample")
+epicsEnvSet("TOP","/app/TTI-magnets-")
+epicsEnvSet("EPICS_BASE","/epics/epics-base")
+epicsEnvSet("ASYN","/epics/support/asyn")
+epicsEnvSet("CALC","/epics/support/calc")
+epicsEnvSet("SUPPORT","/epics/support")
+epicsEnvSet("STREAMDEVICE","/epics/support/StreamDevice")
+epicsEnvSet("MODBUS","/epics/support/modbus")
+epicsEnvSet("STREAM_PROTOCOL_PATH", "$(TOP)/db")
+
 cd "${TOP}"
 
-## Load database definition
 dbLoadDatabase "dbd/streamdeviceSample.dbd"
 streamdeviceSample_registerRecordDeviceDriver pdbbase
 
-epicsEnvSet("STREAM_PROTOCOL_PATH", "${TOP}/db:${TOP}/protocol")
-epicsEnvSet("BOOT", "${TOP}/iocBoot/${IOC}")
+drvAsynIPPortConfigure("TTI1", "192.168.197.125:4001", 0, 0, 0)
 
-epicsEnvSet("DEVICE", "SBNQUA01")
-epicsEnvSet("PORT", "SBNQUA01_PORT")
-epicsEnvSet("MOXA_IP", "192.168.197.125")
-epicsEnvSet("MOXA_TCP_PORT", "4001")
+asynSetOption("TTI1", 0, "disconnectOnReadTimeout", "Y")
 
-drvAsynIPPortConfigure("$(PORT)", "$(MOXA_IP):$(MOXA_TCP_PORT)", 0, 0, 0)
+asynSetTraceMask("TTI1", 0, 0x9)
+asynSetTraceIOMask("TTI1", 0, 0x2)
 
-asynSetOption("$(PORT)", 0, "disconnectOnReadTimeout", "Y")
-
-asynOctetSetOutputEos("$(PORT)", 0, "\n")
-
-asynOctetSetInputEos("$(PORT)", 0, "\r\n")
-dbLoadRecords("db/TSX.db", "P=MAGNETS:, R=SBNQUA01:, PORT=$(PORT)")
-
-# IOC INITIALIZATION
+dbLoadRecords("db/TTI.template", "P=LAB:,R=PS1:,PORT=TTI1")
 
 cd "${TOP}/iocBoot/${IOC}"
+
 iocInit
-dbl
+epicsThreadSleep 1
+dbl 

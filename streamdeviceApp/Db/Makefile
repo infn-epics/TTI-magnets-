@@ -12,6 +12,8 @@ include $(TOP)/configure/CONFIG
 # databases, templates, substitutions like this
 DB += streamdevicesample.template
 DB += streamdevicesample.proto
+DB += TTI.template
+DB += TTI.proto
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
