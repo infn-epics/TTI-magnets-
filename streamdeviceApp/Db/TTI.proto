@@ -1,169 +1,82 @@
+Terminator = CR LF;
+ReplyTimeout = 3000;
+ReadTimeout = 500;
+ExtraInput = Ignore;
 
-# Terminatori di comando
-Terminator = LF;        
-InTerminator = CR LF;   
-
-# Timeout e retry
-ReplyTimeout = 1000;    # 1 secondo
-ReadTimeout = 500;      # 500ms
-WriteTimeout = 500;     # 500ms
-ExtraInput = Ignore;    # Ignora caratteri extra
-
-
-getVoltageSet {
-    out "V1?";
-    in "V1 %f";
+# voltege
+getVoltageRbv {
+    out "\x14\x01VO?";
+    in " %fV";
 }
 
-getVoltageRbv {
-    out "V1O?";
-    in "%fV";
+getVoltageSetpoint {
+    out "\x14\x01V?";
+    in "V %f";
 }
 
 setVoltage {
-    out "V1 %.3f";
+    out "\x14\x01V %.3f";
 }
 
-setVoltageVerify {
-    out "V1V %.3f";
-}
-
-getCurrentSet {
-    out "I1?";
-    in "I1 %f";
-}
-
-getCurrentRbv {
-    out "I1O?";
-    in "%fA";
-}
-
+# current
 setCurrent {
-    out "I1 %.3f";
+    out "\x14\x01I %.3f";
 }
+
+getCurrent {
+    out "\x14\x01IO?";
+    in " %fA";
+}
+
+getCurrentSetpoint {
+    out "\x14\x01I?";
+    in "I %f";
+}
+# output
+setOutput {
+    out "\x14\x01OP %d";
+}
+# ovp
 
 getOVP {
-    out "OVP1?";
-    in "VP1 %f";
+    out "\x14\x01OVP?";
+    in "OVP %f";
 }
 
 setOVP {
-    out "OVP1 %.3f";
+    out "\x14\x01OVP %.3f";
 }
 
-getOutputState {
-    out "OP1?";
-    in "%d";
-}
-
-setOutputState {
-    out "OP1 %d";
-}
-
+# potenza 
 getPower {
-    out "POWER1?";
-    in "%f";
+    out "\x14\x01POWER?";
+    in " %f";
 }
 
-getLimitStatus {
-    out "LSR1?";
+# identitificazione device
+
+getIdentity {
+    out "\x14\x01*IDN?";
+    in "%#s";
+}
+
+# reset
+
+resetInstrument {
+    out "\x14\x01*RST";
+}
+
+# stato errori
+getStatusByte {         #stato device
+    out "\x14\x01*STB?";
     in "%d";
-}
-
-getDeltaV {
-    out "DELTAV1?";
-    in "DELTAV1 %f";
-}
-
-setDeltaV {
-    out "DELTAV1 %.3f";
-}
-
-getDeltaI {
-    out "DELTAI1?";
-    in "DELTAI1 %f";
-}
-
-setDeltaI {
-    out "DELTAI1 %.3f";
-}
-
-incVoltage {
-    out "INCV1";
-}
-
-decVoltage {
-    out "DECV1";
-}
-
-incCurrent {
-    out "INCI1";
-}
-
-decCurrent {
-    out "DECI1";
-}
-
-setDamping {
-    out "DAMPING1 %d";
-}
-
-saveSetup {
-    out "*SAV1 %d";
-}
-
-recallSetup {
-    out "*RCL1 %d";
-}
-
-getIDN {
-    out "*IDN?";
-    in "%39c";
-}
-
-reset {
-    out "*RST";
 }
 
 clearStatus {
-    out "*CLS";
+    out "\x14\x01*CLS";
 }
 
-goLocal {
-    out "LOCAL";
-}
-
-getESR {
-    out "*ESR?";
+getEventStatus {         #stato errori
+    out "\x14\x01*ESR?";
     in "%d";
-}
-
-getSTB {
-    out "*STB?";
-    in "%d";
-}
-
-getEER {
-    out "EER?";
-    in "%d";
-}
-
-getQER {
-    out "QER?";
-    in "%d";
-}
-
-getIPAddr {
-    out "IPADDR?";
-    in "%39c";
-}
-
-getNetmask {
-    out "NETMASK?";
-    in "%39c";
-}
-
-getNetConfig {
-    out "NETCONFIG?";
-    in "%39c";
 }

@@ -1,51 +1,73 @@
+# tensione set point, readkback e setpoint readback
 record(ai, "$(P)$(R)Voltage-RB") {
+    field(DESC, "Output Voltage Readback")
     field(DTYP, "stream")
     field(INP, "@TTI.proto getVoltageRbv $(PORT)")
     field(EGU, "V")
     field(PREC, "3")
-    field(SCAN, "1 second")
+    field(SCAN, "2 second")
 }
 
 record(ao, "$(P)$(R)Voltage-SP") {
+    field(DESC, "Voltage Setpoint")
     field(DTYP, "stream")
     field(OUT, "@TTI.proto setVoltage $(PORT)")
     field(EGU, "V")
     field(PREC, "3")
     field(DRVL, "0")
-    field(DRVH, "35.3")
+    field(DRVH, "35")
 }
-
-record(ai, "$(P)$(R)VoltageSet") {
+record(ai, "$(P)$(R)Voltage-SP-RB") {
     field(DTYP, "stream")
-    field(INP, "@TTI.proto getVoltageSet $(PORT)")
+    field(INP, "@TTI.proto getVoltageSetpoint $(PORT)")
     field(EGU, "V")
     field(PREC, "3")
     field(SCAN, "5 second")
+    field(DESC, "Voltage setpoint readback")
+}
+
+# corrente set point, readkback e setpoint readback
+record(ao, "$(P)$(R)Current-SP") {
+    field(DTYP, "stream")
+    field(OUT,  "@tti.proto setCurrent TTI1")
+    field(PREC, "3")
 }
 
 record(ai, "$(P)$(R)Current-RB") {
     field(DTYP, "stream")
-    field(INP, "@TTI.proto getCurrentRbv $(PORT)")
-    field(EGU, "A")
+    field(INP,  "@tti.proto getCurrent TTI1")
     field(PREC, "3")
     field(SCAN, "1 second")
 }
 
-record(ao, "$(P)$(R)Current-SP") {
+record(ai, "$(P)$(R)Current-SP-RB") {
     field(DTYP, "stream")
-    field(OUT, "@TTI.proto setCurrent $(PORT)")
-    field(EGU, "A")
-    field(PREC, "3")
-    field(DRVL, "0.01")
-    field(DRVH, "10.2")
-}
-
-record(ai, "$(P)$(R)CurrentSet") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getCurrentSet $(PORT)")
+    field(INP, "@TTI.proto getCurrentSetpoint $(PORT)")
     field(EGU, "A")
     field(PREC, "3")
     field(SCAN, "5 second")
+    field(DESC, "Current limit readback")
+}
+
+# controllo startramp 
+record(bo, "$(P)$(R)Output") {
+    field(DTYP, "stream")
+    field(OUT, "@TTI.proto setOutput $(PORT)")
+    field(ZNAM, "OFF")
+    field(ONAM, "ON")
+    field(DESC, "Output ON/OFF control")
+}
+
+# over current protection
+
+record(ao, "$(P)$(R)OVP-SP") {
+    field(DTYP, "stream")
+    field(OUT, "@TTI.proto setOVP $(PORT)")
+    field(EGU, "V")
+    field(PREC, "3")
+    field(DRVL, "0")
+    field(DRVH, "40")
+    field(DESC, "Over-voltage protection setpoint")
 }
 
 record(ai, "$(P)$(R)OVP-RB") {
@@ -54,194 +76,53 @@ record(ai, "$(P)$(R)OVP-RB") {
     field(EGU, "V")
     field(PREC, "3")
     field(SCAN, "10 second")
+    field(DESC, "Over-voltage protection readback")
 }
 
-record(ao, "$(P)$(R)OVP-SP") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto setOVP $(PORT)")
-    field(EGU, "V")
-    field(PREC, "3")
-    field(DRVL, "1")
-    field(DRVH, "40")
-}
-
-record(bi, "$(P)$(R)Output-Sts") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getOutputState $(PORT)")
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-    field(SCAN, "1 second")
-}
-
-record(bo, "$(P)$(R)Output-Cmd") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto setOutputState $(PORT)")
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-}
-
-record(ai, "$(P)$(R)Power") {
+record(ai, "$(P)$(R)Power-RB") {
     field(DTYP, "stream")
     field(INP, "@TTI.proto getPower $(PORT)")
     field(EGU, "W")
-    field(PREC, "2")
-    field(SCAN, "1 second")
-}
-
-record(longin, "$(P)$(R)LimitStatus") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getLimitStatus $(PORT)")
+    field(PREC, "3")
     field(SCAN, "2 second")
+    field(DESC, "Output power readback")
 }
 
-record(ai, "$(P)$(R)DeltaV-RB") {
+record(stringin, "$(P)$(R)Identity") {
     field(DTYP, "stream")
-    field(INP, "@TTI.proto getDeltaV $(PORT)")
-    field(EGU, "V")
-    field(PREC, "3")
-    field(SCAN, "10 second")
-}
-
-record(ao, "$(P)$(R)DeltaV-SP") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto setDeltaV $(PORT)")
-    field(EGU, "V")
-    field(PREC, "3")
-    field(DRVL, "0")
-    field(DRVH, "1.0")
-}
-
-record(ai, "$(P)$(R)DeltaI-RB") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getDeltaI $(PORT)")
-    field(EGU, "A")
-    field(PREC, "3")
-    field(SCAN, "10 second")
-}
-
-record(ao, "$(P)$(R)DeltaI-SP") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto setDeltaI $(PORT)")
-    field(EGU, "A")
-    field(PREC, "3")
-    field(DRVL, "0")
-    field(DRVH, "1.0")
-}
-
-record(bo, "$(P)$(R)VoltageInc") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto incVoltage $(PORT)")
-    field(ZNAM, "Idle")
-    field(ONAM, "Increment")
-}
-
-record(bo, "$(P)$(R)VoltageDec") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto decVoltage $(PORT)")
-    field(ZNAM, "Idle")
-    field(ONAM, "Decrement")
-}
-
-record(bo, "$(P)$(R)CurrentInc") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto incCurrent $(PORT)")
-    field(ZNAM, "Idle")
-    field(ONAM, "Increment")
-}
-
-record(bo, "$(P)$(R)CurrentDec") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto decCurrent $(PORT)")
-    field(ZNAM, "Idle")
-    field(ONAM, "Decrement")
-}
-
-record(bo, "$(P)$(R)Damping-Cmd") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto setDamping $(PORT)")
-    field(ZNAM, "OFF")
-    field(ONAM, "ON")
-}
-
-record(longout, "$(P)$(R)StoreMem") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto saveSetup $(PORT)")
-    field(DRVL, "1")
-    field(DRVH, "25")
-}
-
-record(longout, "$(P)$(R)RecallMem") {
-    field(DTYP, "stream")
-    field(OUT, "@TTI.proto recallSetup $(PORT)")
-    field(DRVL, "1")
-    field(DRVH, "25")
-}
-
-record(stringin, "$(P)$(R)IDN") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getIDN $(PORT)")
+    field(INP, "@TTI.proto getIdentity $(PORT)")
+    field(SCAN, "Passive")
     field(PINI, "YES")
+    field(DESC, "Device identification")
 }
 
-record(bo, "$(P)$(R)Reset") {
+record(bo, "$(P)$(R)Reset-Cmd") {
     field(DTYP, "stream")
-    field(OUT, "@TTI.proto reset $(PORT)")
-    field(ZNAM, "Idle")
+    field(OUT, "@TTI.proto resetInstrument $(PORT)")
+    field(ZNAM, "Ready")
     field(ONAM, "Reset")
+    field(DESC, "Reset instrument")
 }
 
-record(bo, "$(P)$(R)ClearStatus") {
+record(bo, "$(P)$(R)ClearStatus-Cmd") {
     field(DTYP, "stream")
     field(OUT, "@TTI.proto clearStatus $(PORT)")
-    field(ZNAM, "Idle")
+    field(ZNAM, "Ready")
     field(ONAM, "Clear")
+    field(DESC, "Clear status registers")
 }
 
-record(bo, "$(P)$(R)GoLocal") {
+
+record(longin, "$(P)$(R)StatusByte-RB") {
     field(DTYP, "stream")
-    field(OUT, "@TTI.proto goLocal $(PORT)")
-    field(ZNAM, "Idle")
-    field(ONAM, "Local")
+    field(INP, "@TTI.proto getStatusByte $(PORT)")
+    field(SCAN, "Passive")
+    field(DESC, "Status Byte Register")
 }
 
-record(longin, "$(P)$(R)ESR") {
+record(longin, "$(P)$(R)EventStatus-RB") {
     field(DTYP, "stream")
-    field(INP, "@TTI.proto getESR $(PORT)")
-    field(SCAN, "5 second")
-}
-
-record(longin, "$(P)$(R)STB") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getSTB $(PORT)")
-    field(SCAN, "5 second")
-}
-
-record(longin, "$(P)$(R)EER") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getEER $(PORT)")
-    field(SCAN, "5 second")
-}
-
-record(longin, "$(P)$(R)QER") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getQER $(PORT)")
-    field(SCAN, "5 second")
-}
-
-record(stringin, "$(P)$(R)IPAddr") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getIPAddr $(PORT)")
-    field(PINI, "YES")
-}
-
-record(stringin, "$(P)$(R)Netmask") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getNetmask $(PORT)")
-    field(PINI, "YES")
-}
-
-record(stringin, "$(P)$(R)NetConfig") {
-    field(DTYP, "stream")
-    field(INP, "@TTI.proto getNetConfig $(PORT)")
-    field(PINI, "YES")
+    field(INP, "@TTI.proto getEventStatus $(PORT)")
+    field(SCAN, "Passive")
+    field(DESC, "Standard Event Status Register")
 }
