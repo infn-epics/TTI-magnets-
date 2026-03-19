@@ -5,83 +5,83 @@ ExtraInput = Ignore;
 
 # voltege
 getVoltageRbv {
-    out "\x14\x01VO?";
+    out "VO?";
     in " %fV";
 }
 
 getVoltageSetpoint {
-    out "\x14\x01V?";
+    out "V?";
     in "V %f";
 }
 
 setVoltage {
-    out "\x14\x01V %.3f";
+    out "V %.3f";
 }
 
 # current
 setCurrent {
-    out "\x14\x01I %.3f";
+    out "I %.3f";
 }
 
 getCurrent {
-    out "\x14\x01IO?";
+    out "IO?";
     in " %fA";
 }
 
 getCurrentSetpoint {
-    out "\x14\x01I?";
+    out "I?";
     in "I %f";
 }
 # output
 setOutput {
-    out "\x14\x01OP %d";
+    out "OP %d";
 }
 # ovp
 
 getOVP {
-    out "\x14\x01OVP?";
+    out "OVP?";
     in "OVP %f";
 }
 
 setOVP {
-    out "\x14\x01OVP %.3f";
+    out "OVP %.3f";
 }
 
 # potenza 
 getPower {
-    out "\x14\x01POWER?";
+    out "POWER?";
     in " %f";
 }
 
 # identitificazione device
 
 getIdentity {
-    out "\x14\x01*IDN?";
+    out "*IDN?";
     in "%#s";
 }
 
 # reset
 
 resetInstrument {
-    out "\x14\x01*RST";
+    out "*RST";
 }
 
 # stato errori
 getStatusByte {         #stato device
-    out "\x14\x01*STB?";
+    out "*STB?";
     in "%d";
 }
 
 clearStatus {
-    out "\x14\x01*CLS";
+    out "*CLS";
 }
 
 getEventStatus {         #stato errori
-    out "\x14\x01*ESR?";
+    out "*ESR?";
     in "%d";
 }
 
 getLimitStatus {
-    out "\x14\x01LSR?";
+    out "LSR?";
     in "%d";
 }

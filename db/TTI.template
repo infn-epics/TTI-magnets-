@@ -64,11 +64,12 @@ record(bo, "$(P)$(R)Output") {
 
 record(calcout, "$(P)$(R)Autoramp") {
     field(DESC, "Auto-enable output when V and I set")
-    field(INPA, "$(P)$(R)VOLTAGE_SP")
-    field(INPB, "$(P)$(R)CURRENT_SP")
-    field(CALC, "(A>0)&&(B>0)?1:0")
+    # field(INPA, "$(P)$(R)VOLTAGE_SP")
+    # &&(B>0)
+    field(INPA, "$(P)$(R)CURRENT_SP")
+    field(CALC, "(A>0)?1:0")
     field(OUT, "$(P)$(R)Output PP")
-    field(OOPT, "When Non-zero")
+    field(OOPT, "Every Time")
     field(DOPT, "Use CALC")
     field(ODLY, "0.5")
 }
@@ -158,4 +159,66 @@ record(mbbiDirect, "$(P)$(R)LimitStatus-RB") {
     field(DESC, "Limit Event Status Register")
     field(NOBT, "8")
     field(SHFT, "0")
+}
+
+
+
+# unimag 
+
+
+record(mbbo, "$(P)$(R)STATE_SP") {
+    field(DESC, "State setpoint")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "RESET")
+    field(THVL, "3")
+    field(THST, "CLEAR")
+    field(FLNK, "$(P)$(R)state_to_cmd")
+}
+
+record(seq, "$(P)$(R)state_to_cmd") {
+    field(DESC, "State to command mapping")
+
+    field(DOL1, "0")                        
+    field(LNK1, "$(P)$(R)Output PP")
+
+    field(DOL2, "1")                         
+    field(LNK2, "$(P)$(R)Output PP")
+
+    field(DOL3, "1")                         
+    field(LNK3, "$(P)$(R)Reset-Cmd PP")
+
+    field(DOL4, "1")                        
+    field(LNK4, "$(P)$(R)ClearStatus-Cmd PP")
+
+    field(SELM, "Specified")
+    field(SELL, "$(P)$(R)STATE_SP")
+    field(SCAN, "Passive")
+}
+
+record(calcout, "$(P)$(R)STATE_RB_CALC") {
+    field(INPA, "$(P)$(R)Output")
+    field(INPB, "$(P)$(R)LimitStatus-RB.B0")  
+    field(INPC, "$(P)$(R)LimitStatus-RB.B1")  
+    field(CALC, "(A=0)?0:(B||C)?2:1")
+    field(OUT,  "$(P)$(R)STATE_RB PP")
+    field(OOPT, "Every Time")
+    field(SCAN,  "1 second")
+}
+
+record(mbbi, "$(P)$(R)STATE_RB") {
+    field(DESC, "State readback")
+    field(SCAN, "Passive")
+    field(ZRVL, "0")
+    field(ZRST, "OFF")
+    field(ONVL, "1")
+    field(ONST, "ON")
+    field(TWVL, "2")
+    field(TWST, "LIMITING")
+    field(THVL, "3")
+    field(THST, "ERROR")
+    field(THSV, "MAJOR")
 }

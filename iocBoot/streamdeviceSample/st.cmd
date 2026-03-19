@@ -18,8 +18,7 @@ cd "$(TOP)"
 dbLoadDatabase "dbd/streamdeviceSample.dbd"
 streamdeviceSample_registerRecordDeviceDriver pdbbase
 
-drvAsynIPPortConfigure("TTI1", "192.168.197.125:4001", 0, 0, 0)
-
+drvAsynIPPortConfigure("TTI1","192.168.197.49:4001", 0, 0, 0)
 asynSetOption("TTI1", 0, "disconnectOnReadTimeout", "Y")
 
 dbLoadRecords("db/TTI.template", "P=SPARC:,R=TTI:,PORT=TTI1")
