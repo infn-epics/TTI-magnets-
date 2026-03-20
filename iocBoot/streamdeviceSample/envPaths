@@ -1,5 +1,5 @@
-epicsEnvSet("IOC","streamdeviceSample")
-epicsEnvSet("TOP","/app/epics-streamdevice-template")
+epicsEnvSet("IOC","tti-ps")
+epicsEnvSet("TOP","../..")
 epicsEnvSet("EPICS_BASE","/epics/epics-base")
 epicsEnvSet("ASYN","/epics/support/asyn")
 epicsEnvSet("CALC","/epics/support/calc")
