@@ -30,7 +30,7 @@ record(ai, "$(P):$(R):VOLTAGE_SP_RB") {
 # corrente set point, readkback e setpoint readback
 record(ao, "$(P):$(R):CURRENT_SP") {
     field(DTYP, "stream")
-    field(OUT,  "@tti.proto setCurrent TTI1")
+    field(OUT,  "@tti.proto setCurrent $(PORT)")
     field(PREC, "3")
     field(DRVL, "0")
     field(DRVH, "20")
@@ -39,7 +39,7 @@ record(ao, "$(P):$(R):CURRENT_SP") {
 
 record(ai, "$(P):$(R):CURRENT_RB") {
     field(DTYP, "stream")
-    field(INP,  "@tti.proto getCurrent TTI1")
+    field(INP,  "@tti.proto getCurrent $(PORT)")
     field(PREC, "3")
     field(SCAN, "1 second")
 }
